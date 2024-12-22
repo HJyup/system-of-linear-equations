@@ -1,7 +1,8 @@
 module Module.Matrix (
     Matrix,
     fromList,
-    toList
+    toList,
+    determinant
 ) where
 
 newtype Matrix = Matrix [[Double]]
@@ -20,10 +21,10 @@ instance Num Matrix where
         | isScalarMatrix b = Matrix (map (map (* scalarValue b)) a)
         | otherwise = error "Matrix multiplication: Only scalar multiplication is supported"
       where
-        isScalarMatrix [[_]] = True
-        isScalarMatrix _     = False
-        scalarValue [[x]] = x
-        scalarValue _     = error "Invalid scalar matrix"
+        isScalarMatrix ([[_]]) = True
+        isScalarMatrix _              = False
+        scalarValue ([[x]]) = x
+        scalarValue _              = error "Invalid scalar matrix"
 
     negate (Matrix a) = Matrix (map (map negate) a)
 
@@ -49,3 +50,44 @@ isValid m = allEqual (map length m)
 
 sameSize :: [[Double]] -> [[Double]] -> Bool
 sameSize a b = (length a == length b) && (length (head a) == length (head b))
+
+isSquare :: [[Double]] -> Bool
+isSquare [] = True
+isSquare m  =
+  let rowCount    = length m
+      colCount    = length (head m)
+  in  rowCount == colCount 
+      && all (\row -> length row == colCount) m
+
+determinant :: Matrix -> Double
+determinant (Matrix m)
+  | not (isSquare m) = error "determinant: Matrix must be square"
+  | null m           = 1
+  | n == 1           = head (head m)
+  | n == 2           = det2x2 m
+  | otherwise        = laplaceExpand m
+  where
+    n = length m
+
+laplaceExpand :: [[Double]] -> Double
+laplaceExpand m =
+  let row0 = head m
+      n    = length row0
+  in  sum [ ((-1)^(j)) * row0 !! j
+            * determinant (minorMatrix 1 (j + 1) (Matrix m))
+          | j <- [0..n-1] ]
+
+det2x2 :: [[Double]] -> Double
+det2x2 [[a, b], [c, d]] = a * d - b * c
+det2x2 _ = error "det2x2: Not a 2×2 matrix"
+
+minorMatrix :: Int -> Int -> Matrix -> Matrix
+minorMatrix i j (Matrix m) =
+  Matrix
+    [ [ row !! col
+      | col <- [0 .. length row - 1]
+      , col /= (j - 1)
+      ]
+    | (rowIndex, row) <- zip [1..] m
+    , rowIndex /= i
+    ]
