@@ -62,7 +62,7 @@ executable system-of-linear-equations
     main-is:          Main.hs
 
     -- Modules included in this executable, other than Main.
-    other-modules:    Module.File, Module.Matrix, Module.Parse
+    other-modules:    Module.File, Module.Matrix, Module.Parse, Module.Matrix.Determinant, Module.Matrix.Inverse, Module.Matrix.Type
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:

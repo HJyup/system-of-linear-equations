@@ -1,15 +1,19 @@
 module Main where
 
-import Module.Matrix
+import Module.Matrix (fromList, determinant, inverse)
 
 main :: IO ()
 main = do
-    let m1 = fromList [[1, 2], [3, 4]]
-    let m2 = fromList [[5, 6], [7, 8]]
-    let m3 = fromList [[1, 1, 1], [5, 5, 5], [7, 8, 121]]
+    let maybeA = fromList [[2, 1],
+                           [3, 4]]
+    case maybeA of
+      Nothing -> putStrLn "Invalid matrix data."
+      Just a  -> do
+        putStrLn $ "Matrix A: " ++ show a ++ "\n"
+        let d = determinant a
+        putStrLn $ "det(A) = " ++ show d ++ "\n"
 
-    case (m1, m2, m3) of
-        (Just matrix1, Just matrix2, Just matrix3) -> do
-            print $ determinant matrix3
-            print "Matrices are valid."
-        _ -> putStrLn "Invalid matrices"
+        let invA = inverse a
+        putStrLn $ "Inverse A: " ++ show invA ++ "\n"
+
+        putStrLn $ "A * A^{-1} = " ++ show (a * invA) ++ "\n"
