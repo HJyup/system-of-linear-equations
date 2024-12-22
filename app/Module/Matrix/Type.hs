@@ -1,7 +1,13 @@
 module Module.Matrix.Type where
 
 newtype Matrix = Matrix [[Double]]
-    deriving (Show, Eq)
+    deriving (Eq)
+
+instance Show Matrix where
+    show (Matrix rows) =
+        let showRow row = "[ " ++ unwords (map show row) ++ " ]"
+        in  "Matrix:\n"
+            ++ unlines (map showRow rows)
 
 instance Num Matrix where
     (+) (Matrix a) (Matrix b)

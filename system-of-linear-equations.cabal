@@ -68,7 +68,7 @@ executable system-of-linear-equations
     -- other-extensions:
 
     -- Other library packages from which modules are imported.
-    build-depends: base >= 4.14 && < 5
+    build-depends: base >=4.14 && <5, split, MissingH
 
     -- Directories containing source files.
     hs-source-dirs:   app

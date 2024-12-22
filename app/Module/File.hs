@@ -7,3 +7,6 @@ readFileContents filePath = do
 writeFileContents :: FilePath -> String -> IO ()
 writeFileContents filePath contents = do
     writeFile filePath contents
+
+splitLines :: String -> [String]
+splitLines str = lines str
